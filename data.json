@@ -1,0 +1,24 @@
+[
+  {
+    "model": "nodes.node",
+    "pk": 1,
+    "fields": {
+      "title": "Test Node!",
+      "description": "A simple description!"
+    }
+  }, 
+  {
+  "model": "nodes.node",
+  "pk": 2,
+  "fields": {
+    "title": "Second Node!",
+    "description": "THIS IS A SECOND NODE"}
+  },
+  {
+  "model": "nodes.node",
+  "pk": 3,
+  "fields": {
+    "title": "Third?",
+    "description": "NO WAY"}
+  }
+]
