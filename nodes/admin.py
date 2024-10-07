@@ -1,10 +1,12 @@
 from django.contrib import admin
-from .models import Node, Edge, Tag, TagSet, FilesToTagSet
+from .models import Node, Edge, Tag, FilesToNode
 
 # Register your models here.
 
-admin.site.register(Node)
+class TagsAsCheckboxes(admin.ModelAdmin):
+    filter_horizontal = ('tags',)
+
+admin.site.register(Node, TagsAsCheckboxes)
 admin.site.register(Edge)
 admin.site.register(Tag)
-admin.site.register(TagSet)
-admin.site.register(FilesToTagSet)
+admin.site.register(FilesToNode, TagsAsCheckboxes)

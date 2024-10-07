@@ -5,7 +5,7 @@ from django.db import models
 class Node(models.Model):
     title = models.CharField(max_length=255, unique=True)
     description = models.TextField()
-
+    tags = models.ManyToManyField('Tag', related_name='nodes')
     def __str__(self):
         return self.title
     
@@ -15,8 +15,8 @@ class Edge(models.Model):
         (2, 'required-prev')
     )
 
-    from_node = models.ForeignKey(Node, related_name="edges_from", on_delete=models.CASCADE)
-    to_node = models.ForeignKey(Node, related_name="edges_to", on_delete=models.CASCADE)
+    from_node = models.ForeignKey(Node, related_name="edge_from", on_delete=models.CASCADE)
+    to_node = models.ForeignKey(Node, related_name="edge_to", on_delete=models.CASCADE)
     edge_type = models.IntegerField(choices=EDGE_TYPE_CHOICES, default=1)
     
     class Meta:
@@ -34,17 +34,11 @@ class Tag(models.Model):
     def __str__(self):
         return self.title
 
-class TagSet(models.Model):
-    title = models.CharField(max_length=255, unique=True)
-    given_tag = models.ForeignKey(Tag, related_name="set_tag", on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.title} : {self.given_tag.title}"
-    
-class FilesToTagSet(models.Model):
-    set_title = models.OneToOneField(TagSet, related_name="files_set_title", on_delete=models.CASCADE, unique=True)
+class FilesToNode(models.Model):
+    node = models.ForeignKey(Node, related_name="file", on_delete=models.CASCADE)
+    tags = models.ManyToManyField(Tag, related_name="file_tags")
     file_path = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"File {self.set_title} at {self.file_path}"
-    
+        tag_list = ", ".join([tag.title for tag in self.tags.all()])
+        return f"File {self.node.title} with tags [{tag_list}] at {self.file_path}"
